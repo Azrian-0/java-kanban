@@ -15,18 +15,18 @@ public class Main {
         Task task1 = manager.createTask(new Task("Задача 1", "1", Status.NEW));
         Task task2 = manager.createTask(new Task("Задача 2", "2", Status.NEW));
 
-        SubTask subTask1 = manager.createSubTask(new SubTask("Саб 1/1 ", "Первого эпика", Status.NEW));
-        SubTask subTask2 = manager.createSubTask(new SubTask("Саб 2/1 ", "Первого эпика", Status.NEW));
+        Epic epic1 = manager.createEpic(new Epic("Эпик 1  ", "Первый эпик  ", Status.NEW));
+        Epic epic2 = manager.createEpic(new Epic("Эпик 2  ", "Второй эпик  ", Status.NEW));
+
+        SubTask subTask1 = manager.createSubTask(new SubTask("Саб 1/1 ", "Первого эпика", Status.NEW, epic1));
+        SubTask subTask2 = manager.createSubTask(new SubTask("Саб 2/1 ", "Первого эпика", Status.NEW, epic1));
         ArrayList<SubTask> epic1Sub = new ArrayList<>();
         epic1Sub.add(subTask1);
         epic1Sub.add(subTask2);
 
-        SubTask subTask3 = manager.createSubTask(new SubTask("Саб 1/2 ", "Второго эпика", Status.NEW));
+        SubTask subTask3 = manager.createSubTask(new SubTask("Саб 1/2 ", "Второго эпика", Status.NEW, epic2));
         ArrayList<SubTask> epic2Sub = new ArrayList<>();
         epic2Sub.add(subTask3);
-
-        Epic epic1 = manager.createEpic(new Epic("Эпик 1  ", "Первый эпик  ", Status.NEW, epic1Sub));
-        Epic epic2 = manager.createEpic(new Epic("Эпик 2  ", "Второй эпик  ", Status.NEW, epic2Sub));
 
         for (Map.Entry<Integer, Task> entry : manager.tasks.entrySet()) {
             System.out.println(entry.getValue());
@@ -43,9 +43,9 @@ public class Main {
         manager.updateTask(task1);
         task2.setStatus(Status.IN_PROGRESS);
         manager.updateTask(task2);
-        subTask1.setStatus(Status.DONE);
+        subTask1.setStatus(Status.IN_PROGRESS);
         manager.updateSubTask(subTask1);
-        subTask2.setStatus(Status.IN_PROGRESS);
+        subTask2.setStatus(Status.DONE);
         manager.updateSubTask(subTask2);
         subTask3.setStatus(Status.DONE);
         manager.updateSubTask(subTask3);
@@ -61,8 +61,9 @@ public class Main {
         }
         System.out.println("_________________________________________________________________________________________");
 
-        manager.deleteById(1);
-        manager.deleteById(7);
+        manager.deleteTaskById(1);
+        manager.deleteSubTaskById(5);
+        manager.deleteEpicById(4);
 
         for (Map.Entry<Integer, Task> entry : manager.tasks.entrySet()) {
             System.out.println(entry.getValue());
@@ -73,5 +74,6 @@ public class Main {
         for (Map.Entry<Integer, SubTask> entry : manager.subTasks.entrySet()) {
             System.out.println(entry.getValue());
         }
+        System.out.println("_________________________________________________________________________________________");
     }
 }

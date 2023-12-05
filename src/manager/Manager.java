@@ -38,6 +38,10 @@ public class Manager {
     }
 
     public void updateEpic(Epic epic) {
+        epics.put(epic.getId(), epic);
+    }
+
+    public void updateStatusEpic(Epic epic) {
         int done = 0;
         for (SubTask subTask : epic.getSubTasks()) {
             if (subTask.getStatus().equals(Status.IN_PROGRESS)) {
@@ -51,48 +55,63 @@ public class Manager {
         if (done == epic.getSubTasks().size()) {
             epic.setStatus(Status.DONE);
         }
-        epics.put(epic.getId(), epic);
     }
 
     public SubTask createSubTask(SubTask subTask) {
         subTask.setId(addId());
         subTasks.put(subTask.getId(), subTask);
+        Epic epic = getEpicById(subTask.getEpicId());
+        epic.setSubTasks(subTask);
+        updateStatusEpic(epic);
         return subTask;
     }
 
     public void updateSubTask(SubTask subTask) {
         subTasks.put(subTask.getId(), subTask);
-        subTask.setId(addId());
-        updateEpic(epics.get(subTask.getEpicId()));
+        updateStatusEpic(epics.get(subTask.getEpicId()));
     }
 
-    public void deleteById(Integer id) {
-        if (tasks.containsKey(id)) {
-            tasks.remove(id);
-        } else if (epics.containsKey(id)) {
-            for (Map.Entry<Integer, SubTask> entry : subTasks.entrySet()) {
-                if (entry.getValue().getEpicId() == id) {
-                    subTasks.remove(entry.getKey());
-                }
+    public void deleteTaskById(int id) {
+        tasks.remove(id);
+    }
+
+    public void deleteSubTaskById(int id) {
+        int epicId = subTasks.get(id).getEpicId();
+        subTasks.remove(id);
+        Epic epic = getEpicById(epicId);
+        SubTask subTaskToDelete = null;
+        for (SubTask subTask : epic.getSubTasks()) {
+            if (subTask.getId() == id) {
+                subTaskToDelete = subTask;
             }
-            epics.remove(id);
-        } else if (subTasks.containsKey(id)) {
-            subTasks.remove(id);
-        } else {
-            System.out.println("Нет задачи с таким ID");
         }
+        epic.getSubTasks().remove(subTaskToDelete);
+        updateStatusEpic(epic);
+    }
+
+    public void deleteEpicById(int id) {
+        for (Map.Entry<Integer, SubTask> entry : subTasks.entrySet()) {
+            if (entry.getValue().getEpicId() == id) {
+                subTasks.remove(entry.getKey());
+            }
+        }
+        epics.remove(id);
     }
 
     public ArrayList<SubTask> getEpicSubTasks(Epic epic) {
         return epic.getSubTasks();
     }
 
-    public HashMap<Integer, Task> getAllTasks() {
-        return tasks;
+    public ArrayList<Task> getAllTasks() {
+        return new ArrayList<>(tasks.values());
     }
 
-    public HashMap<Integer, Epic> getAllEpicTasks() {
-        return epics;
+    public ArrayList<Epic> getAllEpicTasks() {
+        return new ArrayList<>(epics.values());
+    }
+
+    public ArrayList<SubTask> getAllSubTasks() {
+        return new ArrayList<>(subTasks.values());
     }
 
     public void deleteAllTask() {
@@ -106,6 +125,9 @@ public class Manager {
 
     public void deleteAllSubTasks() {
         subTasks.clear();
+        for (Epic epic : epics.values()) {
+            epic.clearSubTasks();
+        }
     }
 
     public Task getTaskById(Integer taskId) {
@@ -117,7 +139,7 @@ public class Manager {
         }
     }
 
-    public Task getSubTaskById(Integer taskId) {
+    public SubTask getSubTaskById(Integer taskId) {
         if (subTasks.containsKey(taskId)) {
             return subTasks.get(taskId);
         } else {
@@ -126,7 +148,7 @@ public class Manager {
         }
     }
 
-    public Task getEpicById(Integer taskId) {
+    public Epic getEpicById(Integer taskId) {
         if (epics.containsKey(taskId)) {
             return epics.get(taskId);
         } else {
