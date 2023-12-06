@@ -7,12 +7,11 @@ import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Manager {
-    public HashMap<Integer, Task> tasks = new HashMap<>();
-    public HashMap<Integer, Epic> epics = new HashMap<>();
-    public HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private HashMap<Integer, Task> tasks = new HashMap<>();
+    private HashMap<Integer, Epic> epics = new HashMap<>();
+    private HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     private int nextId = 0;
 
@@ -41,7 +40,7 @@ public class Manager {
         epics.put(epic.getId(), epic);
     }
 
-    public void updateStatusEpic(Epic epic) {
+    public void updateStatusEpic(Epic epic) { // ?
         int done = 0;
         for (SubTask subTask : epic.getSubTasks()) {
             if (subTask.getStatus().equals(Status.IN_PROGRESS)) {
@@ -76,24 +75,17 @@ public class Manager {
     }
 
     public void deleteSubTaskById(int id) {
-        int epicId = subTasks.get(id).getEpicId();
+        SubTask subTaskToDelete = subTasks.get(id);
         subTasks.remove(id);
-        Epic epic = getEpicById(epicId);
-        SubTask subTaskToDelete = null;
-        for (SubTask subTask : epic.getSubTasks()) {
-            if (subTask.getId() == id) {
-                subTaskToDelete = subTask;
-            }
-        }
+        Epic epic = getEpicById(subTaskToDelete.getEpicId());
         epic.getSubTasks().remove(subTaskToDelete);
         updateStatusEpic(epic);
     }
 
     public void deleteEpicById(int id) {
-        for (Map.Entry<Integer, SubTask> entry : subTasks.entrySet()) {
-            if (entry.getValue().getEpicId() == id) {
-                subTasks.remove(entry.getKey());
-            }
+        Epic epicToDelete = epics.remove(id);
+        for (SubTask subTask : epicToDelete.getSubTasks()){
+            subTasks.remove(subTask.getId());
         }
         epics.remove(id);
     }
@@ -127,6 +119,7 @@ public class Manager {
         subTasks.clear();
         for (Epic epic : epics.values()) {
             epic.clearSubTasks();
+            updateStatusEpic(epic);
         }
     }
 
@@ -155,5 +148,17 @@ public class Manager {
             System.out.println("Нет эпика с таким ID");
             return null;
         }
+    }
+
+    public HashMap<Integer, Task> getTasks() {
+        return tasks;
+    }
+
+    public HashMap<Integer, Epic> getEpics() {
+        return epics;
+    }
+
+    public HashMap<Integer, SubTask> getSubTasks() {
+        return subTasks;
     }
 }

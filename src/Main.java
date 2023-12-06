@@ -28,13 +28,13 @@ public class Main {
         ArrayList<SubTask> epic2Sub = new ArrayList<>();
         epic2Sub.add(subTask3);
 
-        for (Map.Entry<Integer, Task> entry : manager.tasks.entrySet()) {
+        for (Map.Entry<Integer, Task> entry : manager.getTasks().entrySet()) {
             System.out.println(entry.getValue());
         }
-        for (Map.Entry<Integer, Epic> entry : manager.epics.entrySet()) {
+        for (Map.Entry<Integer, Epic> entry : manager.getEpics().entrySet()) {
             System.out.println(entry.getValue());
         }
-        for (Map.Entry<Integer, SubTask> entry : manager.subTasks.entrySet()) {
+        for (Map.Entry<Integer, SubTask> entry : manager.getSubTasks().entrySet()) {
             System.out.println(entry.getValue());
         }
         System.out.println("_________________________________________________________________________________________");
@@ -50,13 +50,13 @@ public class Main {
         subTask3.setStatus(Status.DONE);
         manager.updateSubTask(subTask3);
 
-        for (Map.Entry<Integer, Task> entry : manager.tasks.entrySet()) {
+        for (Map.Entry<Integer, Task> entry : manager.getTasks().entrySet()) {
             System.out.println(entry.getValue());
         }
-        for (Map.Entry<Integer, Epic> entry : manager.epics.entrySet()) {
+        for (Map.Entry<Integer, Epic> entry : manager.getEpics().entrySet()) {
             System.out.println(entry.getValue());
         }
-        for (Map.Entry<Integer, SubTask> entry : manager.subTasks.entrySet()) {
+        for (Map.Entry<Integer, SubTask> entry : manager.getSubTasks().entrySet()) {
             System.out.println(entry.getValue());
         }
         System.out.println("_________________________________________________________________________________________");
@@ -65,13 +65,13 @@ public class Main {
         manager.deleteSubTaskById(5);
         manager.deleteEpicById(4);
 
-        for (Map.Entry<Integer, Task> entry : manager.tasks.entrySet()) {
+        for (Map.Entry<Integer, Task> entry : manager.getTasks().entrySet()) {
             System.out.println(entry.getValue());
         }
-        for (Map.Entry<Integer, Epic> entry : manager.epics.entrySet()) {
+        for (Map.Entry<Integer, Epic> entry : manager.getEpics().entrySet()) {
             System.out.println(entry.getValue());
         }
-        for (Map.Entry<Integer, SubTask> entry : manager.subTasks.entrySet()) {
+        for (Map.Entry<Integer, SubTask> entry : manager.getSubTasks().entrySet()) {
             System.out.println(entry.getValue());
         }
         System.out.println("_________________________________________________________________________________________");
