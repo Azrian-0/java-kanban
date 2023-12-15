@@ -1,7 +1,6 @@
 package tasks;
 
 import enums.Status;
-
 import java.util.ArrayList;
 
 public class Epic extends Task {

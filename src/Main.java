@@ -1,16 +1,16 @@
 import enums.Status;
-import manager.Manager;
+import manager.Managers;
+import manager.interfaces.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
 
-        Manager manager = new Manager();
+        TaskManager manager = Managers.getDefault();
 
         Task task1 = manager.createTask(new Task("Задача 1", "1", Status.NEW));
         Task task2 = manager.createTask(new Task("Задача 2", "2", Status.NEW));
@@ -28,52 +28,17 @@ public class Main {
         ArrayList<SubTask> epic2Sub = new ArrayList<>();
         epic2Sub.add(subTask3);
 
-        for (Map.Entry<Integer, Task> entry : manager.getTasks().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        for (Map.Entry<Integer, Epic> entry : manager.getEpics().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        for (Map.Entry<Integer, SubTask> entry : manager.getSubTasks().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        System.out.println("_________________________________________________________________________________________");
+        manager.getTaskById(1);
+        manager.getTaskById(2);
+        manager.getEpicById(3, true);
+        manager.getEpicById(4, true);
+        manager.getSubTaskById(5);
+        manager.getSubTaskById(6);
 
-        task1.setStatus(Status.DONE);
-        manager.updateTask(task1);
-        task2.setStatus(Status.IN_PROGRESS);
-        manager.updateTask(task2);
-        subTask1.setStatus(Status.IN_PROGRESS);
-        manager.updateSubTask(subTask1);
-        subTask2.setStatus(Status.DONE);
-        manager.updateSubTask(subTask2);
-        subTask3.setStatus(Status.DONE);
-        manager.updateSubTask(subTask3);
+        manager.getTaskById(2);
+        manager.getEpicById(3, true);
+        manager.getSubTaskById(6);
 
-        for (Map.Entry<Integer, Task> entry : manager.getTasks().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        for (Map.Entry<Integer, Epic> entry : manager.getEpics().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        for (Map.Entry<Integer, SubTask> entry : manager.getSubTasks().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        System.out.println("_________________________________________________________________________________________");
-
-        manager.deleteTaskById(1);
-        manager.deleteSubTaskById(5);
-        manager.deleteEpicById(4);
-
-        for (Map.Entry<Integer, Task> entry : manager.getTasks().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        for (Map.Entry<Integer, Epic> entry : manager.getEpics().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        for (Map.Entry<Integer, SubTask> entry : manager.getSubTasks().entrySet()) {
-            System.out.println(entry.getValue());
-        }
-        System.out.println("_________________________________________________________________________________________");
+        System.out.println(manager.getHistory());
     }
 }
