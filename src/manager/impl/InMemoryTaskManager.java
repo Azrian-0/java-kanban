@@ -7,6 +7,7 @@ import manager.interfaces.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -148,36 +149,33 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskById(Integer taskId) {
         if (tasks.containsKey(taskId)) {
-            historyManager.add(tasks.get(taskId));
-            return tasks.get(taskId);
-        } else {
-            System.out.println("Нет задачи с таким ID");
-            return null;
+            Task task = tasks.get(taskId);
+            historyManager.add(task);
+            return task;
         }
+        return null;
     }
 
     @Override
     public SubTask getSubTaskById(Integer taskId) {
         if (subTasks.containsKey(taskId)) {
-            historyManager.add(subTasks.get(taskId));
-            return subTasks.get(taskId);
-        } else {
-            System.out.println("Нет подзадачи с таким ID");
-            return null;
+            SubTask subTask = subTasks.get(taskId);
+            historyManager.add(subTask);
+            return subTask;
         }
+        return null;
     }
 
     @Override
     public Epic getEpicById(Integer taskId, boolean addToHistory) {
         if (epics.containsKey(taskId)) {
+            Epic epic = epics.get(taskId);
             if (addToHistory) {
-                historyManager.add(epics.get(taskId));
+                historyManager.add(epic);
             }
-            return epics.get(taskId);
-        } else {
-            System.out.println("Нет эпика с таким ID");
-            return null;
+            return epic;
         }
+        return null;
     }
 
     @Override
