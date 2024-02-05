@@ -1,8 +1,9 @@
-package manager.interfaces;
+package managers.interfaces;
 
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;

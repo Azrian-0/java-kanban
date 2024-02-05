@@ -1,13 +1,15 @@
-package manager.impl;
+package managers.impl;
 
-import manager.interfaces.HistoryManager;
+import managers.interfaces.HistoryManager;
 import tasks.Task;
+import util.CustomLinkedList;
+
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private static final int HISTORY_MAX_SIZE = 10;
 
-    private final List<Task> browsingHistory = new LinkedList<>();
+    private final CustomLinkedList<Task> browsingHistory = new CustomLinkedList<>();
 
     @Override
     public void add(Task task) {
@@ -18,7 +20,17 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
+    public void remove(int id) {
+        browsingHistory.remove(id);
+    }
+
+    @Override
     public Set<Task> getHistory() {
-        return new LinkedHashSet<>(browsingHistory);
+        return browsingHistory.toSet();
+    }
+
+    @Override
+    public void clearHistory() {
+        browsingHistory.clearHistory();
     }
 }
