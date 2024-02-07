@@ -7,16 +7,12 @@ import util.CustomLinkedList;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private static final int HISTORY_MAX_SIZE = 10;
 
     private final CustomLinkedList<Task> browsingHistory = new CustomLinkedList<>();
 
     @Override
     public void add(Task task) {
         browsingHistory.add(task);
-        if (browsingHistory.size() > HISTORY_MAX_SIZE) {
-            browsingHistory.remove(0);
-        }
     }
 
     @Override
@@ -25,8 +21,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public Set<Task> getHistory() {
-        return browsingHistory.toSet();
+    public ArrayList<Task> getHistory() {
+        return browsingHistory.toArrayList();
     }
 
     @Override

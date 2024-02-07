@@ -6,7 +6,6 @@ import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public interface TaskManager {
 
@@ -56,5 +55,5 @@ public interface TaskManager {
 
     HashMap<Integer, SubTask> getSubTasks();
 
-    Set<Task> getHistory();
+    ArrayList<Task> getHistory();
 }
