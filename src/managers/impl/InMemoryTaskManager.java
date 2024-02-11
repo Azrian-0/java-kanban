@@ -184,7 +184,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicById(Integer taskId, boolean addToHistory) {
         if (epics.containsKey(taskId)) {
             Epic epic = epics.get(taskId);
-            if (addToHistory && epic != null) {
+            if (addToHistory) {
                 historyManager.add(epic);
             }
             return epic;

@@ -13,8 +13,8 @@ public class Main {
 
         String filePath = "BackedTasks.csv";
 
-//        TaskManager manager = Managers.getFileBackedManager(filePath);
-//
+        FileBackedTasksManager manager = Managers.getFileBackedManager(filePath);
+
 //        for (int i = 1; i <= 3; i++) {
 //            Task task1 = manager.createTask(new Task("Задача " + i, "Описание задачи " + i, Status.NEW));
 //            manager.getTaskById(task1.getId());
@@ -39,8 +39,14 @@ public class Main {
 //
 //        manager.getEpicById(epic2.getId(), true);
 //        manager.getSubTaskById(subTask2.getId());
+//
+//        manager.save();
 
-        TaskManager fileManager = FileBackedTasksManager.loadFromFile(filePath);
+        manager.loadFromFile(filePath);
+
+        System.out.println(manager.getAllSubTasks());
+
+        System.out.println(manager.getHistory());
 
 //        System.out.println(fileManager.getHistory());
     }

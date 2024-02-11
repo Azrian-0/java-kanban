@@ -21,7 +21,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    public static String toString(Task task) {
+    public String toString(Task task) {
         String epicIdString = "";
         if (task.getTaskType() == TaskType.SUBTASK) {
             SubTask subTask = (SubTask) task;
@@ -48,7 +48,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         try {
             status = Status.valueOf(parts[4]);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Неверное значение статуса задачи: " + parts[4]);
+            throw new IllegalArgumentException("Неверное значение статуса задачи: " + parts[4] + id);
         }
         int epicId = 0;
         if (parts.length == 6 && parts[5] != null && !parts[5].isEmpty()) {
@@ -122,25 +122,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             String taskFields = "id,type,name,description,status,epicId";
             bufferedWriter.write(taskFields);
             bufferedWriter.write("\n");
-            if (!tasks.isEmpty()) {
-                for (Task task : tasks.values()) {
-                    bufferedWriter.write(toString(task));
-                    bufferedWriter.write("\n");
-                }
+            for (Task task : tasks.values()) {
+                writeToFile(task, bufferedWriter);
             }
-            if (!epics.isEmpty()) {
-                for (Task epics : epics.values()) {
-                    bufferedWriter.write(toString(epics));
-                    bufferedWriter.write("\n");
-                }
+            for (Epic epic : epics.values()) {
+                writeToFile(epic, bufferedWriter);
             }
-            if (!subTasks.isEmpty()) {
-                for (Task subTask : subTasks.values()) {
-                    bufferedWriter.write(toString(subTask));
-                    bufferedWriter.write("\n");
-                }
+            for (SubTask subTask : subTasks.values()) {
+                writeToFile(subTask, bufferedWriter);
             }
-
             bufferedWriter.write(historyToString(historyManager));
             bufferedWriter.close();
         } catch (IOException e) {
@@ -148,29 +138,40 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public static FileBackedTasksManager loadFromFile(String file) {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+    private void writeToFile(Task task, BufferedWriter bufferedWriter) throws IOException {
+        bufferedWriter.write(toString(task));
+        bufferedWriter.write("\n");
+    }
+
+    public void loadFromFile(String file) {
         String taskString = readFile(file);
-        if (taskString == null) {
-            return fileBackedTasksManager;
-        }
         String[] lineTask = taskString.split("\n");
         List<Integer> idTask = historyFromString(file);
         for (int i = 1; i < lineTask.length; i++) {
             if (lineTask[i].isEmpty()) {
                 break;
             }
-            Task task = fileBackedTasksManager.fromString(lineTask[i]);
+            Task task = this.fromString(lineTask[i]);
             if (task != null) {
+                switch (task.getTaskType()) {
+                    case TASK:
+                        super.createTask(task);
+                        break;
+                    case EPIC:
+                        super.createEpic((Epic) task);
+                        break;
+                    case SUBTASK:
+                        super.createSubTask((SubTask) task);
+                        break;
+                }
                 for (Integer id : idTask) {
                     if (task.getId() == id) {
-                        fileBackedTasksManager.historyManager.add(task);
+                        this.historyManager.add(task);
                     }
                 }
             }
         }
-        fileBackedTasksManager.save();
-        return fileBackedTasksManager;
+        this.save();
     }
 
     @Override
