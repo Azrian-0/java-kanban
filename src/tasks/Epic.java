@@ -1,10 +1,12 @@
 package tasks;
 
 import enums.Status;
+import enums.TaskType;
 
 import java.util.ArrayList;
 
 public class Epic extends Task {
+
     private ArrayList<SubTask> subTasks = new ArrayList<>();
 
     public Epic(String taskName, String description, Status status) {
@@ -21,5 +23,9 @@ public class Epic extends Task {
 
     public void clearSubTasks() {
         subTasks.clear();
+    }
+
+    public TaskType getTaskType() {
+        return TaskType.EPIC;
     }
 }

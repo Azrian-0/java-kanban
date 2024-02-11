@@ -1,5 +1,6 @@
 package managers;
 
+import managers.impl.FileBackedTasksManager;
 import managers.impl.InMemoryHistoryManager;
 import managers.impl.InMemoryTaskManager;
 import managers.interfaces.HistoryManager;
@@ -12,5 +13,9 @@ public class Managers {
 
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
+    }
+
+    public static FileBackedTasksManager getFileBackedManager(String filePath){
+        return new FileBackedTasksManager(filePath);
     }
 }

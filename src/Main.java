@@ -1,5 +1,6 @@
 import enums.Status;
 import managers.Managers;
+import managers.impl.FileBackedTasksManager;
 import managers.interfaces.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
@@ -10,25 +11,23 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
 
-        TaskManager manager = Managers.getDefault();
+        String filePath = "BackedTasks.csv";
 
-        for (int i = 1; i <= 10; i++) {
-            Task task1 = manager.createTask(new Task("Задача " + i, String.valueOf(i), Status.NEW));
-            manager.getTaskById(task1.getId());
-        }
-
-        for (int i = 10; i >= 1; i--){
-            manager.getTaskById(i);
-        }
-
-//        Epic epic1 = manager.createEpic(new Epic("Эпик 1  ", "Первый эпик  ", Status.NEW));
-//        Epic epic2 = manager.createEpic(new Epic("Эпик 2  ", "Второй эпик  ", Status.NEW));
+//        TaskManager manager = Managers.getFileBackedManager(filePath);
 //
-//        SubTask subTask1 = manager.createSubTask(new SubTask("Саб 1/1 ", "Первого эпика", Status.NEW, epic1));
-//        SubTask subTask2 = manager.createSubTask(new SubTask("Саб 2/1 ", "Первого эпика", Status.DONE, epic1));
-//        SubTask subTask3 = manager.createSubTask(new SubTask("Саб 3/1 ", "Первого эпика", Status.IN_PROGRESS, epic1));
+//        for (int i = 1; i <= 3; i++) {
+//            Task task1 = manager.createTask(new Task("Задача " + i, "Описание задачи " + i, Status.NEW));
+//            manager.getTaskById(task1.getId());
+//        }
 //
-//        SubTask subTask4 = manager.createSubTask(new SubTask("Саб 1/2 ", "Второго эпика", Status.DONE, epic2));
+//        Epic epic1 = manager.createEpic(new Epic("Эпик 1", "Первый эпик", Status.NEW));
+//        Epic epic2 = manager.createEpic(new Epic("Эпик 2", "Второй эпик", Status.NEW));
+//
+//        SubTask subTask1 = manager.createSubTask(new SubTask("Саб 1/1", "Первого эпика", Status.NEW, epic1));
+//        SubTask subTask2 = manager.createSubTask(new SubTask("Саб 2/1", "Первого эпика", Status.DONE, epic1));
+//        SubTask subTask3 = manager.createSubTask(new SubTask("Саб 3/1", "Первого эпика", Status.IN_PROGRESS, epic1));
+//
+//        SubTask subTask4 = manager.createSubTask(new SubTask("Саб 1/2", "Второго эпика", Status.DONE, epic2));
 //
 //        ArrayList<SubTask> epic1Sub = new ArrayList<>();
 //        epic1Sub.add(subTask1);
@@ -37,7 +36,12 @@ public class Main {
 //
 //        ArrayList<SubTask> epic2Sub = new ArrayList<>();
 //        epic2Sub.add(subTask4);
+//
+//        manager.getEpicById(epic2.getId(), true);
+//        manager.getSubTaskById(subTask2.getId());
 
-        System.out.println(manager.getHistory());
+        TaskManager fileManager = FileBackedTasksManager.loadFromFile(filePath);
+
+//        System.out.println(fileManager.getHistory());
     }
 }

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    protected HashMap<Integer, Task> tasks = new HashMap<>();
+    protected HashMap<Integer, Epic> epics = new HashMap<>();
+    protected HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
-    private HistoryManager historyManager = Managers.getDefaultHistory();
+    protected HistoryManager historyManager = Managers.getDefaultHistory();
 
     private int nextId = 0;
 
@@ -184,7 +184,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicById(Integer taskId, boolean addToHistory) {
         if (epics.containsKey(taskId)) {
             Epic epic = epics.get(taskId);
-            if (addToHistory) {
+            if (addToHistory && epic != null) {
                 historyManager.add(epic);
             }
             return epic;
