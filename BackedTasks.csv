@@ -9,4 +9,4 @@ id,type,name,description,status,epicId
 8,SUBTASK,Саб 3/1,Первого эпика,IN_PROGRESS,4
 9,SUBTASK,Саб 1/2,Второго эпика,DONE,5
 
-1,2,3,5,7
+1,2,4,6,9

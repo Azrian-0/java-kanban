@@ -2,6 +2,7 @@ package managers.impl;
 
 import enums.Status;
 import enums.TaskType;
+import exceptions.ManagerSaveException;
 import managers.interfaces.HistoryManager;
 import tasks.Epic;
 import tasks.SubTask;
@@ -21,66 +22,43 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    public String toString(Task task) {
+    private String toString(Task task) {
         String epicIdString = "";
         if (task.getTaskType() == TaskType.SUBTASK) {
             SubTask subTask = (SubTask) task;
             epicIdString = String.valueOf(subTask.getEpicId());
         }
         String epicIdComma = epicIdString.isEmpty() ? "" : ",";
-        String finalComma = epicIdString.isEmpty() ? "" : ",";
+        /*
+        т.к только у подзадачи есть id эпика к которому она принадлежит, избавляюсь от запятой в конце строки у задач с типом task и epic.
+        1,TASK,Задача 1,Описание задачи 1,NEW, -> 1,TASK,Задача 1,Описание задачи 1,NEW
+        4,EPIC,Эпик 1,Первый эпик,IN_PROGRESS, -> 4,EPIC,Эпик 1,Первый эпик,IN_PROGRESS
+        6,SUBTASK,Саб 1/1,Первого эпика,NEW,4  -> 6,SUBTASK,Саб 1/1,Первого эпика,NEW,4
+         */
         return String.format("%d,%s,%s,%s,%s%s%s",
-                task.getId(), task.getTaskType(), task.getTaskName(), task.getDescription(), task.getStatus(), epicIdComma, epicIdString, finalComma);
+                task.getId(), task.getTaskType(), task.getTaskName(), task.getDescription(), task.getStatus(), epicIdComma, epicIdString);
     }
 
-    public Task fromString(String value) {
+    private Task fromString(String value) {
         String[] parts = value.split(",");
-        int id = Integer.parseInt(parts[0]);
-        TaskType taskType;
-        try {
-            taskType = TaskType.valueOf(parts[1]);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Неверное значение типа задачи: " + parts[1]);
-        }
-        String name = parts[2];
-        String description = parts[3];
-        Status status;
-        try {
-            status = Status.valueOf(parts[4]);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Неверное значение статуса задачи: " + parts[4] + id);
-        }
-        int epicId = 0;
-        if (parts.length == 6 && parts[5] != null && !parts[5].isEmpty()) {
-            epicId = Integer.parseInt(parts[5]);
-        }
-        if (taskType == TaskType.SUBTASK && epicId == 0) {
-            throw new IllegalArgumentException("Отсутствует значение для epicId у SubTask");
-        }
-        Task task = null;
+        final int id = Integer.parseInt(parts[0]);
+        final TaskType taskType = TaskType.valueOf(parts[1]);
+        final String name = parts[2];
+        final String description = parts[3];
+        final Status status = Status.valueOf(parts[4]);
         switch (taskType) {
             case TASK:
-                task = new Task(name, description, status);
-                break;
+                return new Task(id, name, description, status);
             case EPIC:
-                task = new Epic(name, description, status);
-                break;
+                return new Epic(id, name, description, status);
             case SUBTASK:
-                if (epicId == 0) {
-                    throw new IllegalArgumentException("Значение epicId не указано для SubTask: " + value);
-                }
-                Epic phantomEpic = getEpicById(epicId, false);
-                if (phantomEpic == null) {
-                    throw new IllegalArgumentException("Epic с id=" + epicId + " не найден для: " + value);
-                }
-                task = new SubTask(name, description, status, phantomEpic);
-                break;
+                final int epicId = Integer.parseInt(parts[5]);
+                return new SubTask(id, name, description, status, epicId);
         }
-        task.setId(id);
-        return task;
+        return null;
     }
 
-    public static String historyToString(HistoryManager manager) {
+    private static String historyToString(HistoryManager manager) {
         List<Task> tasks = manager.getHistory();
         StringBuilder taskLine = new StringBuilder();
         taskLine.append("\n");
@@ -92,7 +70,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return taskLine.toString();
     }
 
-    public static List<Integer> historyFromString(String value) {
+    private static List<Integer> historyFromString(String value) {
         if (value == null) {
             return new ArrayList<>();
         }
@@ -134,7 +112,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             bufferedWriter.write(historyToString(historyManager));
             bufferedWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка сохранения файла", e);
+            throw new ManagerSaveException("Ошибка сохранения файла: " + e.getMessage());
         }
     }
 

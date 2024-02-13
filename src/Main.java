@@ -44,10 +44,6 @@ public class Main {
 
         manager.loadFromFile(filePath);
 
-        System.out.println(manager.getAllSubTasks());
-
         System.out.println(manager.getHistory());
-
-//        System.out.println(fileManager.getHistory());
     }
 }
