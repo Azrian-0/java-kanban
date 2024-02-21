@@ -42,7 +42,7 @@ public class Main {
 //
 //        manager.save();
 
-        manager.loadFromFile(filePath);
+//        manager.loadFromFile(filePath);
 
         System.out.println(manager.getHistory());
     }

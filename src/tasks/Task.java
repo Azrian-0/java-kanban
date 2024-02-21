@@ -3,25 +3,34 @@ package tasks;
 import enums.Status;
 import enums.TaskType;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
+
+    protected TaskType taskType;
     protected String taskName;
     protected String description;
     protected int id;
     protected Status status;
+    protected long duration = 0;
+    protected LocalDateTime startTime;
 
-    public Task(String taskName, String description, Status status) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yy");
+
+    public Task(String taskName, String description, Status status, long duration, String startTime) {
         this.taskName = taskName;
         this.description = description;
         this.status = status;
+        if (startTime != null && !(startTime.equals("null"))) {
+            createTime(duration, startTime);
+        }
     }
 
-    public Task(int id, String name, String description, Status status) {
+    public Task(int id, String name, String description, Status status, long duration, String startTime) {
+        this(name, description, status, duration, startTime);
         this.id = id;
-        this.taskName = name;
-        this.description = description;
-        this.status = status;
     }
 
     public String getTaskName() {
@@ -62,11 +71,15 @@ public class Task {
 
     @Override
     public String toString() {
-        return
+        String toString =
                 "Название задачи = " + taskName +
                         " / описание = " + description +
                         " / id = " + id +
                         " / статус = " + status;
+        if (duration == 0) {
+            return toString + " / продолжительность = " + duration;
+        } else return toString + " / продолжительность = " + duration +
+                " /  дата = " + startTime.format(formatter);
     }
 
     @Override
@@ -74,11 +87,45 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id;
+        return id == task.id && duration == task.duration && taskType == task.taskType &&
+                Objects.equals(taskName, task.taskName) && status == task.status &&
+                Objects.equals(description, task.description) &&
+                Objects.equals(startTime, task.startTime) && Objects.equals(formatter, task.formatter);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, taskType, taskName, status, description, duration, startTime, formatter);
+    }
+
+    public String getStartTimeToString() {
+        return startTime.format(formatter);
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime != null) {
+            return startTime.plusMinutes(duration);
+        }
+        return null;
+    }
+
+    public String getEndTimeToString() {
+        if (startTime != null) {
+            return startTime.plusMinutes(duration).format(formatter);
+        }
+        return null;
+    }
+
+    public void createTime(long duration, String startTime) {
+        this.duration = duration;
+        this.startTime = LocalDateTime.parse(startTime, formatter);
     }
 }

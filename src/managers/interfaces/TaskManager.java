@@ -6,6 +6,7 @@ import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -37,12 +38,6 @@ public interface TaskManager {
 
     ArrayList<SubTask> getAllSubTasks();
 
-    void deleteAllTask();
-
-    void deleteAllEpic();
-
-    void deleteAllSubTasks();
-
     Task getTaskById(Integer taskId);
 
     Epic getEpicById(Integer taskId, boolean addToHistory);
@@ -56,4 +51,6 @@ public interface TaskManager {
     HashMap<Integer, SubTask> getSubTasks();
 
     ArrayList<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
 }

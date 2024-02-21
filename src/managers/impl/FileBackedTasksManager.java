@@ -28,15 +28,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             SubTask subTask = (SubTask) task;
             epicIdString = String.valueOf(subTask.getEpicId());
         }
-        String epicIdComma = epicIdString.isEmpty() ? "" : ",";
-        /*
-        т.к только у подзадачи есть id эпика к которому она принадлежит, избавляюсь от запятой в конце строки у задач с типом task и epic.
-        1,TASK,Задача 1,Описание задачи 1,NEW, -> 1,TASK,Задача 1,Описание задачи 1,NEW
-        4,EPIC,Эпик 1,Первый эпик,IN_PROGRESS, -> 4,EPIC,Эпик 1,Первый эпик,IN_PROGRESS
-        6,SUBTASK,Саб 1/1,Первого эпика,NEW,4  -> 6,SUBTASK,Саб 1/1,Первого эпика,NEW,4
-         */
-        return String.format("%d,%s,%s,%s,%s%s%s",
-                task.getId(), task.getTaskType(), task.getTaskName(), task.getDescription(), task.getStatus(), epicIdComma, epicIdString);
+        return String.format("%d,%s,%s,%s,%s%s%s,%s",
+                task.getId(), task.getTaskType(), task.getTaskName(), task.getDescription(), task.getStatus(), epicIdString, task.getDuration(), task.getStartTimeToString());
     }
 
     private Task fromString(String value) {
@@ -46,14 +39,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         final String name = parts[2];
         final String description = parts[3];
         final Status status = Status.valueOf(parts[4]);
+        final long duration = Long.parseLong(parts[6]);
+        final String startTime = parts[7];
         switch (taskType) {
             case TASK:
-                return new Task(id, name, description, status);
+                return new Task(id, name, description, status, duration, startTime);
             case EPIC:
-                return new Epic(id, name, description, status);
+                return new Epic(id, name, description, status, duration, startTime);
             case SUBTASK:
                 final int epicId = Integer.parseInt(parts[5]);
-                return new SubTask(id, name, description, status, epicId);
+                return new SubTask(id, name, description, status, epicId, duration, startTime);
         }
         return null;
     }
@@ -97,7 +92,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         try {
             Writer fileWriter = new FileWriter(file);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            String taskFields = "id,type,name,description,status,epicId";
+            String taskFields = "id,type,name,description,status,duration,startTime";
             bufferedWriter.write(taskFields);
             bufferedWriter.write("\n");
             for (Task task : tasks.values()) {
@@ -214,24 +209,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.getEpicSubTasks(epic);
         save();
         return epic.getSubTasks();
-    }
-
-    @Override
-    public void deleteAllTask() {
-        super.deleteAllTask();
-        save();
-    }
-
-    @Override
-    public void deleteAllEpic() {
-        super.deleteAllEpic();
-        save();
-    }
-
-    @Override
-    public void deleteAllSubTasks() {
-        super.deleteAllSubTasks();
-        save();
     }
 
     @Override
