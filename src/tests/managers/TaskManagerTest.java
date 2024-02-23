@@ -21,9 +21,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     private Epic epic2;
     private SubTask subTask1;
     private SubTask subTask2;
-    
+
     protected TasksForTest tasksForTest;
-    
+
     public void createTask() {
         task1 = tasksForTest.task1();
         final int taskId = task1.getId();
@@ -40,7 +40,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(task1, tasks.get(0), "Задачи не совпадают.");
     }
 
-    
+
     void updateTask() {
         task1 = tasksForTest.task1();
         task1.setTaskName("Новое имя");
@@ -57,7 +57,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, tasks.size(), "Неверное количество задач.");
     }
 
-    
+
     void createEpic() {
         epic1 = tasksForTest.epic1();
         final int epicId = epic1.getId();
@@ -74,7 +74,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(epic1, epics.get(0), "Задачи не совпадают.");
     }
 
-    
     void updateEpic() {
         epic1 = tasksForTest.epic1();
         epic1.setTaskName("Новое имя");
@@ -91,7 +90,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, epics.size(), "Неверное количество задач.");
     }
 
-    
     void updateStatusEpic() {
         epic1 = tasksForTest.epic1();
         subTask1 = tasksForTest.subTask1(epic1);
@@ -103,7 +101,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(subTask2.getStatus(), Status.DONE, "Не меняется статус подзадачи.");
     }
 
-    
     void createSubTask() {
         epic1 = tasksForTest.epic1();
         assertNotNull(epic1, "Не создан эпик");
@@ -122,7 +119,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(subTask1, subTasks.get(0), "Задачи не совпадают.");
     }
 
-    
     void updateSubTask() {
         epic1 = tasksForTest.epic1();
         subTask1 = tasksForTest.subTask1(epic1);
@@ -140,7 +136,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, subTasks.size(), "Неверное количество задач.");
     }
 
-    
     void deleteTaskById() {
         task1 = tasksForTest.task1();
         task2 = tasksForTest.task2();
@@ -158,7 +153,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, afterDeletedHistory.size(), "Неверное количество задач в истории просмотров");
     }
 
-    
     void deleteSubTaskById() {
         epic1 = tasksForTest.epic1();
         subTask1 = tasksForTest.subTask1(epic1);
@@ -177,12 +171,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, afterDeletedHistory.size(), "Неверное количество задач в истории просмотров");
     }
 
-    
     void deleteEpicById() {
         epic1 = tasksForTest.epic1();
         epic2 = tasksForTest.epic2();
-        manager.getEpicById(epic1.getId(),true);
-        manager.getEpicById(epic2.getId(),true);
+        manager.getEpicById(epic1.getId(), true);
+        manager.getEpicById(epic2.getId(), true);
         manager.getHistory();
         manager.deleteEpicById(epic2.getId());
 
@@ -195,7 +188,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, afterDeletedHistory.size(), "Неверное количество задач в истории просмотров");
     }
 
-    
     void getEpicSubTasks() {
         epic1 = tasksForTest.epic1();
         subTask1 = tasksForTest.subTask1(epic1);
@@ -207,7 +199,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(2, epicSubs.size(), "Неверное количество задач");
     }
 
-    
     void getAllTasks() {
         task1 = tasksForTest.task1();
         task2 = tasksForTest.task2();
@@ -218,7 +209,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(2, tasks.size(), "Неверное количество задач");
     }
 
-    
     void getAllEpicTasks() {
         epic1 = tasksForTest.epic1();
         epic2 = tasksForTest.epic2();
@@ -229,7 +219,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(2, epics.size(), "Неверное количество задач");
     }
 
-    
     void getAllSubTasks() {
         epic1 = tasksForTest.epic1();
         assertNotNull(epic1, "Не создан эпик");
@@ -242,7 +231,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(2, subTasks.size(), "Неверное количество задач");
     }
 
-    
     void getTaskById() {
         task1 = tasksForTest.task1();
         manager.getTaskById(task1.getId());
@@ -256,7 +244,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, tasksHistory.size(), "Неверное количество задач в истории просмотров");
     }
 
-    
     void getEpicById() {
         epic1 = tasksForTest.epic1();
         manager.getEpicById(epic1.getId(), true);
@@ -270,7 +257,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, tasksHistory.size(), "Неверное количество задач в истории просмотров");
     }
 
-    
     void getSubTaskById() {
         epic1 = tasksForTest.epic1();
         subTask1 = tasksForTest.subTask1(epic1);
@@ -285,7 +271,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, tasksHistory.size(), "Неверное количество задач в истории просмотров");
     }
 
-    
     void getTasks() {
         task1 = tasksForTest.task1();
         task2 = tasksForTest.task2();
@@ -296,7 +281,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(2, tasks.size(), "Неверное количество задач");
     }
 
-    
     void getEpics() {
         epic1 = tasksForTest.epic1();
         epic2 = tasksForTest.epic2();
@@ -306,7 +290,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(2, epics.size(), "Неверное количество задач");
     }
 
-    
     void getSubTasks() {
         epic1 = tasksForTest.epic1();
         subTask1 = tasksForTest.subTask1(epic1);
@@ -317,7 +300,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(2, subs.size(), "Неверное количество задач");
     }
 
-    
     void getHistory() {
         task1 = tasksForTest.task1();
         manager.getTaskById(task1.getId());

@@ -17,7 +17,7 @@ public class Task {
     protected long duration = 0;
     protected LocalDateTime startTime;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yy");
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public Task(String taskName, String description, Status status, long duration, String startTime) {
         this.taskName = taskName;
@@ -128,4 +128,5 @@ public class Task {
         this.duration = duration;
         this.startTime = LocalDateTime.parse(startTime, formatter);
     }
+
 }

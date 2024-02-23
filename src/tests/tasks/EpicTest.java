@@ -28,7 +28,6 @@ class EpicTest {
         epic = tasksForTest.epic1();
         subTask1 = tasksForTest.subTask1(epic);
         subTask2 = tasksForTest.subTask2(epic);
-
     }
 
     @Test
@@ -82,20 +81,19 @@ class EpicTest {
         LocalDateTime timeEpic = epic.getEndTime();
         Assertions.assertNull(timeEpic, "Неправильное время");
     }
+
     @Test
     public void epicTimeBasedOnSubtasks() {
-        subTask1.createTime(20, "10:00 06.01.24");
+        subTask1.createTime(15, "2024-02-21T20:00:00");
         manager.updateSubTask(subTask1);
-        subTask2.createTime(30, "11:00 06.01.24");
+        subTask2.createTime(15, "2024-02-21T20:00:00");
         manager.updateSubTask(subTask2);
-
-        LocalDateTime timeTestStart = LocalDateTime.of(2024, 1, 6, 10, 00);
-        LocalDateTime timeTestEnd = LocalDateTime.of(2024, 1, 6, 11, 30);
-        long durationTest = 50;
+        LocalDateTime timeTestStart = LocalDateTime.of(2024, 2, 21, 20, 00);
+        LocalDateTime timeTestEnd = LocalDateTime.of(2024, 2, 21, 20, 30);
+        long durationTest = 30;
         LocalDateTime timeStartOfEpic = epic.getStartTime();
         LocalDateTime timeEndOfEpic = epic.getEndTime();
         long durationEpic = epic.getDuration();
-
         Assertions.assertEquals(timeTestStart, timeStartOfEpic, "Время начала не совпадает");
         Assertions.assertEquals(timeTestEnd, timeEndOfEpic, "Время конца не совпадает");
         Assertions.assertEquals(durationTest, durationEpic, "Продолжительность не совпадает");

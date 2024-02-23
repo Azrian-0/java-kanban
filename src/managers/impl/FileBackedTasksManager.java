@@ -2,6 +2,7 @@ package managers.impl;
 
 import enums.Status;
 import enums.TaskType;
+import exceptions.HistoryLoadException;
 import exceptions.ManagerSaveException;
 import managers.interfaces.HistoryManager;
 import tasks.Epic;
@@ -22,14 +23,25 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    private String toString(Task task) {
-        String epicIdString = "";
+    public String toString(Task task) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(task.getId()).append(',')
+                .append(task.getTaskType()).append(',')
+                .append(task.getTaskName()).append(',')
+                .append(task.getDescription()).append(',')
+                .append(task.getStatus()).append(',');
         if (task.getTaskType() == TaskType.SUBTASK) {
             SubTask subTask = (SubTask) task;
-            epicIdString = String.valueOf(subTask.getEpicId());
+            if (subTask.getEpicId() != 0) {
+                stringBuilder.append(subTask.getEpicId()).append(',');
+            }
+        } else {
+            stringBuilder.append("null").append(',');
         }
-        return String.format("%d,%s,%s,%s,%s%s%s,%s",
-                task.getId(), task.getTaskType(), task.getTaskName(), task.getDescription(), task.getStatus(), epicIdString, task.getDuration(), task.getStartTimeToString());
+        stringBuilder
+                .append(task.getDuration()).append(',')
+                .append(task.getStartTimeToString());
+        return stringBuilder.toString();
     }
 
     private Task fromString(String value) {
@@ -66,23 +78,29 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     private static List<Integer> historyFromString(String value) {
-        if (value == null) {
-            return new ArrayList<>();
+        try {
+            if (value == null) {
+                return new ArrayList<>();
+            }
+            String[] arrayHistory = readFile(value).split("\n");
+            String historyLine = arrayHistory[arrayHistory.length - 1];
+            if (historyLine.isEmpty()) {
+                return new ArrayList<>();
+            }
+            String[] tasksId = historyLine.split(",");
+            List<Integer> historyList = new ArrayList<>();
+            for (String id : tasksId) {
+                historyList.add(Integer.valueOf(id));
+            }
+            return historyList;
+        } catch (Exception e) {
+            throw new HistoryLoadException();
         }
-        String[] arrayHistory = readFile(value).split("\n");
-        String historyLine = arrayHistory[arrayHistory.length - 1];
-        String[] tasksId = historyLine.split(",");
-        List<Integer> historyList = new ArrayList<>();
-        for (String id : tasksId) {
-            historyList.add(Integer.valueOf(id));
-        }
-        return historyList;
     }
 
     private static String readFile(String path) {
         try {
             return Files.readString(Path.of(path));
-
         } catch (IOException e) {
             throw new RuntimeException("Ошибка чтения файла", e);
         }
@@ -92,7 +110,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         try {
             Writer fileWriter = new FileWriter(file);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            String taskFields = "id,type,name,description,status,duration,startTime";
+            String taskFields = "id,type,name,description,status,epicId,duration,startTime";
             bufferedWriter.write(taskFields);
             bufferedWriter.write("\n");
             for (Task task : tasks.values()) {
@@ -119,7 +137,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public void loadFromFile(String file) {
         String taskString = readFile(file);
         String[] lineTask = taskString.split("\n");
-        List<Integer> idTask = historyFromString(file);
+        List<Integer> idTask = new ArrayList<>();
+        try {
+            idTask = historyFromString(file);
+        } catch (HistoryLoadException e) {
+            System.out.println("Не удалось загрузить историю задач");
+        }
         for (int i = 1; i < lineTask.length; i++) {
             if (lineTask[i].isEmpty()) {
                 break;
