@@ -1,11 +1,11 @@
-package tests.managers;
+package managers;
 
 import enums.Status;
 import managers.interfaces.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import tests.tasks.TasksForTest;
+import tasks.TasksForTest;
 
 import java.util.HashMap;
 import java.util.List;

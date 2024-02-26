@@ -1,4 +1,4 @@
-package tests.tasks;
+package tasks;
 
 import enums.Status;
 import managers.Managers;
@@ -6,8 +6,6 @@ import managers.interfaces.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tasks.Epic;
-import tasks.SubTask;
 
 import java.time.LocalDateTime;
 

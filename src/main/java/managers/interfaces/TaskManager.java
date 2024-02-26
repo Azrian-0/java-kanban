@@ -38,6 +38,12 @@ public interface TaskManager {
 
     ArrayList<SubTask> getAllSubTasks();
 
+    void deleteAllTasks();
+
+    void deleteAllEpics();
+
+    void deleteAllSubTasks();
+
     Task getTaskById(Integer taskId);
 
     Epic getEpicById(Integer taskId, boolean addToHistory);

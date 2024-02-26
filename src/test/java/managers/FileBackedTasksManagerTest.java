@@ -1,4 +1,4 @@
-package tests.managers;
+package managers;
 
 import managers.impl.FileBackedTasksManager;
 import org.junit.jupiter.api.Assertions;
@@ -11,10 +11,10 @@ import java.util.List;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
 
-    private final String fileSaveHistory = "BackedTasks.csv";
-    private final String fileSaveClear = "ClearTasks.csv";
-    private final String fileEpicWithoutSub = "EpicWithoutSub.csv";
-    private final String fileEmptyHistory = "EmptyHistory.csv";
+    private final String fileSaveHistory = "src/test/resources/SavedTasks.csv";
+    private final String fileSaveClear = "src/test/resources/ClearTasks.csv";
+    private final String fileEpicWithoutSub = "src/test/resources/EpicWithoutSub.csv";
+    private final String fileEmptyHistory = "src/test/resources/EmptyHistory.csv";
 
     @BeforeEach
     public void createInMemoryTasksManagerTest() {
