@@ -1,9 +1,11 @@
 package tasks;
 
+import com.google.gson.annotations.SerializedName;
 import enums.Status;
 import enums.TaskType;
 
 public class SubTask extends Task {
+    @SerializedName("epicId")
     private int epicId;
 
     public SubTask(String taskName, String description, Status status, Epic epic, long duration, String time) {

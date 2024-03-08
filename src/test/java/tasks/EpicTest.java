@@ -21,7 +21,7 @@ class EpicTest {
 
     @BeforeEach
     public void beforeEach() {
-        manager = Managers.getDefault();
+        manager = Managers.getInMemoryTaskManager();
         tasksForTest = new TasksForTest(manager);
         epic = tasksForTest.epic1();
         subTask1 = tasksForTest.subTask1(epic);
@@ -84,7 +84,7 @@ class EpicTest {
     public void epicTimeBasedOnSubtasks() {
         subTask1.createTime(15, "2024-02-21T20:00:00");
         manager.updateSubTask(subTask1);
-        subTask2.createTime(15, "2024-02-21T20:00:00");
+        subTask2.createTime(15, "2024-02-21T20:15:00");
         manager.updateSubTask(subTask2);
         LocalDateTime timeTestStart = LocalDateTime.of(2024, 2, 21, 20, 00);
         LocalDateTime timeTestEnd = LocalDateTime.of(2024, 2, 21, 20, 30);

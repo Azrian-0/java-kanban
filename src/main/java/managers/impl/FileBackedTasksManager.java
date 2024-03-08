@@ -17,11 +17,13 @@ import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    private final String file;
+    private Path path;
 
-    public FileBackedTasksManager(String file) {
-        this.file = file;
-    }
+//    public FileBackedTasksManager(Path path) {
+//        super();
+//        this.path = path;
+//        loadFromFile(path);
+//    }
 
     public String toString(Task task) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -106,9 +108,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public void save() {
+    protected void save() {
         try {
-            Writer fileWriter = new FileWriter(file);
+            Writer fileWriter = new FileWriter(String.valueOf(path));
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             String taskFields = "id,type,name,description,status,epicId,duration,startTime";
             bufferedWriter.write(taskFields);
@@ -134,12 +136,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         bufferedWriter.write("\n");
     }
 
-    public void loadFromFile(String file) {
-        String taskString = readFile(file);
+    public FileBackedTasksManager loadFromFile(Path path) {
+        String taskString = readFile(String.valueOf(path));
         String[] lineTask = taskString.split("\n");
         List<Integer> idTask = new ArrayList<>();
         try {
-            idTask = historyFromString(file);
+            idTask = historyFromString(String.valueOf(path));
         } catch (HistoryLoadException e) {
             System.out.println("Не удалось загрузить историю задач");
         }
@@ -168,6 +170,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
         }
         this.save();
+        return this;
     }
 
     @Override

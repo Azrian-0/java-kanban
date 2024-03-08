@@ -5,6 +5,7 @@ import enums.TaskType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Epic extends Task {
 
@@ -27,7 +28,10 @@ public class Epic extends Task {
         return subTasks;
     }
 
-    public void setSubTasks(SubTask subTask) {
+    public void setSubTask(SubTask subTask) {
+        if (Objects.isNull(subTasks)){
+            subTasks = new ArrayList<>();
+        }
         subTasks.add(subTask);
     }
 
@@ -41,5 +45,9 @@ public class Epic extends Task {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public void setSubTasks(ArrayList<SubTask> subTasks) {
+        this.subTasks = Objects.isNull(subTasks) ? new ArrayList<SubTask>() : subTasks;
     }
 }

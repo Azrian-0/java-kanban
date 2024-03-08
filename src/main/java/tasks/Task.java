@@ -1,23 +1,28 @@
 package tasks;
 
+import com.google.gson.annotations.SerializedName;
 import enums.Status;
 import enums.TaskType;
-
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+import static util.GsonMappingConfig.*;
+
 public class Task {
-
+    @SerializedName("taskType")
     protected TaskType taskType;
+    @SerializedName("name")
     protected String taskName;
+    @SerializedName("description")
     protected String description;
+    @SerializedName("id")
     protected int id;
+    @SerializedName("status")
     protected Status status;
+    @SerializedName("duration")
     protected long duration = 0;
+    @SerializedName("startTime")
     protected LocalDateTime startTime;
-
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public Task(String taskName, String description, Status status, long duration, String startTime) {
         this.taskName = taskName;
@@ -79,7 +84,7 @@ public class Task {
         if (duration == 0) {
             return toString + " / продолжительность = " + duration;
         } else return toString + " / продолжительность = " + duration +
-                " /  дата = " + startTime.format(formatter);
+                " /  дата = " + startTime.format(DEFAULT_FORMATTER);
     }
 
     @Override
@@ -90,16 +95,16 @@ public class Task {
         return id == task.id && duration == task.duration && taskType == task.taskType &&
                 Objects.equals(taskName, task.taskName) && status == task.status &&
                 Objects.equals(description, task.description) &&
-                Objects.equals(startTime, task.startTime) && Objects.equals(formatter, task.formatter);
+                Objects.equals(startTime, task.startTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, taskType, taskName, status, description, duration, startTime, formatter);
+        return Objects.hash(id, taskType, taskName, status, description, duration, startTime);
     }
 
     public String getStartTimeToString() {
-        return startTime.format(formatter);
+        return startTime.format(DEFAULT_FORMATTER);
     }
 
     public LocalDateTime getStartTime() {
@@ -119,14 +124,13 @@ public class Task {
 
     public String getEndTimeToString() {
         if (startTime != null) {
-            return startTime.plusMinutes(duration).format(formatter);
+            return startTime.plusMinutes(duration).format(DEFAULT_FORMATTER);
         }
         return null;
     }
 
     public void createTime(long duration, String startTime) {
         this.duration = duration;
-        this.startTime = LocalDateTime.parse(startTime, formatter);
+        this.startTime = LocalDateTime.parse(startTime, DEFAULT_FORMATTER);
     }
-
 }
