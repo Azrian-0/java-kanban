@@ -260,6 +260,11 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
+    @Override
+    public void setPrioritizedTasks(Task task) {
+        prioritizedTasks.add(task);
+    }
+
     public void validateTask(Task task) {
         boolean result = getPrioritizedTasks().stream()
                 .filter(t -> t.getStartTime() != null)

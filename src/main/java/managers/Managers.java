@@ -1,5 +1,6 @@
 package managers;
 
+import Server.KVServer;
 import com.google.gson.*;
 import managers.impl.FileBackedTasksManager;
 import managers.impl.HttpTaskManager;
@@ -19,7 +20,7 @@ import java.time.ZoneId;
 public class Managers {
 
     public static TaskManager getDefault() throws IOException, InterruptedException {
-        return new HttpTaskManager(URI.create("http://localhost:8078"));
+        return new HttpTaskManager(URI.create("http://localhost:" + KVServer.PORT));
     }
     public static TaskManager getInMemoryTaskManager() {
         return new InMemoryTaskManager();
@@ -31,5 +32,9 @@ public class Managers {
 
     public static FileBackedTasksManager getFileBackedManager(String filePath) {
         return new FileBackedTasksManager().loadFromFile(Path.of(filePath));
+    }
+
+    public static TaskManager getHttpTaskManager(String uri, Integer port) throws IOException, InterruptedException {
+        return new HttpTaskManager(URI.create(uri + port));
     }
 }

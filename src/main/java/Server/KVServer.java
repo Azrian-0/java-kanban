@@ -51,7 +51,7 @@ public class KVServer {
 				System.out.println("Значение для ключа " + key + " успешно загружено!");
 				sendText(h,value);
 			} else {
-				System.out.println("/load ждёт POST-запрос, а получил: " + h.getRequestMethod());
+				System.out.println("/load ждёт GET-запрос, а получил: " + h.getRequestMethod());
 				h.sendResponseHeaders(405, 0);
 			}
 		} finally {

@@ -21,6 +21,11 @@ public class Task {
     protected Status status;
     @SerializedName("duration")
     protected long duration = 0;
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     @SerializedName("startTime")
     protected LocalDateTime startTime;
 
