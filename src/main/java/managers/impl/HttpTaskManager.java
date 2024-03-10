@@ -2,9 +2,6 @@ package managers.impl;
 
 import client.KVTaskClient;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import tasks.Epic;
 import tasks.SubTask;
@@ -13,18 +10,20 @@ import util.GsonMappingConfig;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 public class HttpTaskManager extends FileBackedTasksManager {
     private KVTaskClient client;
-    private final Gson gson = GsonMappingConfig.getGson();
+    private Gson gson;
 
     public HttpTaskManager(URI uri) throws IOException, InterruptedException {
+        super(Path.of("../BackedTasks.csv"));
         client = new KVTaskClient(uri);
-        //load();
+        gson = GsonMappingConfig.getGson();
+        load();
     }
 
     @Override

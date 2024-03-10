@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class EpicTest {
 
     private TaskManager manager;
@@ -33,7 +31,7 @@ class EpicTest {
         manager.deleteSubTaskById(subTask1.getId());
         manager.deleteSubTaskById(subTask2.getId());
         boolean subTaskEmpty = epic.getSubTasks().isEmpty();
-        assertTrue(subTaskEmpty, "У эпика есть подзадачи");
+        Assertions.assertTrue(subTaskEmpty, "У эпика есть подзадачи");
         Status epicStatus = epic.getStatus();
         Assertions.assertEquals(epicStatus, Status.NEW, "Неправильный статус");
     }

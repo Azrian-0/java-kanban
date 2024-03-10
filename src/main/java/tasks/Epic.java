@@ -29,7 +29,7 @@ public class Epic extends Task {
     }
 
     public void setSubTask(SubTask subTask) {
-        if (Objects.isNull(subTasks)){
+        if (Objects.isNull(subTasks)) {
             subTasks = new ArrayList<>();
         }
         subTasks.add(subTask);

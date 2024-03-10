@@ -9,7 +9,10 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -19,11 +22,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private Path path;
 
-//    public FileBackedTasksManager(Path path) {
-//        super();
-//        this.path = path;
-//        loadFromFile(path);
-//    }
+    public FileBackedTasksManager(Path path) {
+        super();
+        this.path = path;
+    }
 
     public String toString(Task task) {
         StringBuilder stringBuilder = new StringBuilder();

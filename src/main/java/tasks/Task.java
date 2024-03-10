@@ -3,10 +3,11 @@ package tasks;
 import com.google.gson.annotations.SerializedName;
 import enums.Status;
 import enums.TaskType;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import static util.GsonMappingConfig.*;
+import static util.GsonMappingConfig.DEFAULT_FORMATTER;
 
 public class Task {
     @SerializedName("taskType")
@@ -21,11 +22,6 @@ public class Task {
     protected Status status;
     @SerializedName("duration")
     protected long duration = 0;
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
     @SerializedName("startTime")
     protected LocalDateTime startTime;
 

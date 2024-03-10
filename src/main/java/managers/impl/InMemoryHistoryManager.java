@@ -4,7 +4,7 @@ import managers.interfaces.HistoryManager;
 import tasks.Task;
 import util.CustomLinkedList;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class InMemoryHistoryManager implements HistoryManager {
 

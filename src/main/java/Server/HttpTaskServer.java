@@ -21,10 +21,7 @@ public class HttpTaskServer {
     private final int PORT = 8080;
     private HttpServer server;
     private Gson gson;
-
     private TaskManager manager;
-
-    Task task;
 
     public HttpTaskServer() throws Exception {
         manager = Managers.getDefault();
@@ -76,9 +73,16 @@ public class HttpTaskServer {
                 }
                 case "POST": {
                     String requestBody = readText(exchange);
-                    String response = gson.toJson(manager.createTask(gson.fromJson(requestBody, Task.class)));
-                    sendText(exchange, response);
-                    break;
+                    Task task = gson.fromJson(requestBody, Task.class);
+                    if (task.getId() == 0) {
+                        String response = gson.toJson(manager.createTask(gson.fromJson(requestBody, Task.class)));
+                        sendText(exchange, response);
+                        break;
+                    } else {
+                        manager.updateTask(gson.fromJson(requestBody, Task.class));
+                        sendText(exchange, "Задача обновлена");
+                        break;
+                    }
                 }
                 case "DELETE": {
                     if (query != null) {
@@ -117,9 +121,16 @@ public class HttpTaskServer {
                 }
                 case "POST": {
                     String requestBody = readText(exchange);
-                    String response = gson.toJson(manager.createEpic(gson.fromJson(requestBody, Epic.class)));
-                    sendText(exchange, response);
-                    break;
+                    Epic epic = gson.fromJson(requestBody, Epic.class);
+                    if (epic.getId() == 0) {
+                        String response = gson.toJson(manager.createEpic(gson.fromJson(requestBody, Epic.class)));
+                        sendText(exchange, response);
+                        break;
+                    } else {
+                        manager.updateEpic(gson.fromJson(requestBody, Epic.class));
+                        sendText(exchange, "Эпик обновлен");
+                        break;
+                    }
                 }
                 case "DELETE": {
                     if (query != null) {
@@ -158,9 +169,16 @@ public class HttpTaskServer {
                 }
                 case "POST": {
                     String requestBody = readText(exchange);
-                    String response = gson.toJson(manager.createSubTask(gson.fromJson(requestBody, SubTask.class)));
-                    sendText(exchange, response);
-                    break;
+                    SubTask subTask = gson.fromJson(requestBody, SubTask.class);
+                    if (subTask.getId() == 0) {
+                        String response = gson.toJson(manager.createSubTask(gson.fromJson(requestBody, SubTask.class)));
+                        sendText(exchange, response);
+                        break;
+                    } else {
+                        manager.updateSubTask(gson.fromJson(requestBody, SubTask.class));
+                        sendText(exchange, "Подзадача обновлена");
+                        break;
+                    }
                 }
                 case "DELETE": {
                     if (query != null) {
@@ -217,9 +235,9 @@ public class HttpTaskServer {
     private void handlePrioritizedTasks(HttpExchange exchange) {
         try {
             String requestMethod = exchange.getRequestMethod();
-                if (requestMethod.equals("GET")) {
-                    String response = gson.toJson(manager.getPrioritizedTasks());
-                    sendText(exchange, response);
+            if (requestMethod.equals("GET")) {
+                String response = gson.toJson(manager.getPrioritizedTasks());
+                sendText(exchange, response);
             }
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -228,7 +246,7 @@ public class HttpTaskServer {
         }
     }
 
-    private String getQueryId(HttpExchange exchange) throws IOException {
+    protected String getQueryId(HttpExchange exchange) throws IOException {
         String query = exchange.getRequestURI().getQuery();
         if (query != null) {
             return Pattern.compile("\\s&\\s")
