@@ -3,6 +3,7 @@ package managers.impl;
 import client.KVTaskClient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import exceptions.ManagerSaveException;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -75,7 +76,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
                 prioritizedTasks = gson.fromJson(prioritizedTasksFromJson, new TypeToken<TreeSet<Task>>() {
                 }.getType());
             }
-        } catch (NullPointerException e) {
+        } catch (ManagerSaveException e) {
             System.out.println("Пока что нечего загружать");
         }
     }

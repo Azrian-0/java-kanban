@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -11,6 +11,7 @@ import tasks.Task;
 import util.GsonMappingConfig;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -52,7 +53,7 @@ public class HttpTaskServer {
     protected void sendText(HttpExchange h, String text) throws IOException {
         byte[] resp = text.getBytes(UTF_8);
         h.getResponseHeaders().add("Content-Type", "application/json");
-        h.sendResponseHeaders(200, resp.length);
+        h.sendResponseHeaders(HttpURLConnection.HTTP_OK, resp.length);
         h.getResponseBody().write(resp);
     }
 

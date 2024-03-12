@@ -1,6 +1,10 @@
 package client;
 
+import exceptions.HttpRequestException;
+import exceptions.ManagerSaveException;
+
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -33,9 +37,14 @@ public class KVTaskClient {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.statusCode());
-        } catch (Exception exception) {
-            exception.getStackTrace();
+            System.out.println("HTTP Status Code: " + response.statusCode());
+
+            if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                throw new HttpRequestException("HTTP request failed with status code: " + response.statusCode());
+            }
+
+        } catch (IOException | InterruptedException exception) {
+            throw new HttpRequestException("Error while sending HTTP request");
         }
     }
 
@@ -46,13 +55,14 @@ public class KVTaskClient {
                 .uri(URI.create(uri + "/load/" + key + "?API_TOKEN=" + apiToken))
                 .version(HttpClient.Version.HTTP_1_1)
                 .build();
-
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.statusCode());
+            if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                throw new ManagerSaveException("Can't do save request, status code: " + response.statusCode());
+            }
             body = response.body();
-        } catch (Exception e) {
-            e.getStackTrace();
+        } catch (IOException | InterruptedException exception) {
+            throw new HttpRequestException("Error while sending HTTP request");
         }
         return body;
     }

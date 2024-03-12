@@ -1,5 +1,5 @@
-import Server.HttpTaskServer;
-import Server.KVServer;
+import server.HttpTaskServer;
+import server.KVServer;
 
 public class Main {
     public static void main(String[] args) throws Exception {

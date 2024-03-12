@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import com.google.gson.*;
 import enums.Status;
@@ -9,6 +9,7 @@ import tasks.Task;
 import util.GsonMappingConfig;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -61,7 +62,7 @@ class HttpTaskManagerTest {
     @Test
     void createTask() throws IOException, InterruptedException {
         response = postResponse("/tasks/task/", PORT, gson.toJson(task1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена " + response.statusCode());
         response = getResponse("/tasks/task/", PORT);
         String api = response.body();
@@ -69,13 +70,13 @@ class HttpTaskManagerTest {
         JsonObject firstObject = jsonArray.get(0).getAsJsonObject();
         Task receivedTask = gson.fromJson(firstObject, Task.class);
         Assertions.assertEquals(receivedTask.getId(), 1, "Подзадача не создана");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void createEpic() throws IOException, InterruptedException {
         response = postResponse("/tasks/epic/", PORT, gson.toJson(epic1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Эпик не был добавлен" + response.statusCode());
         response = getResponse("/tasks/epic/", PORT);
         String api = response.body();
@@ -83,7 +84,7 @@ class HttpTaskManagerTest {
         JsonObject firstObject = jsonArray.get(0).getAsJsonObject();
         Epic receivedEpic = gson.fromJson(firstObject, Epic.class);
         Assertions.assertEquals(receivedEpic.getId(), 1, "Подзадача не создана");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
@@ -95,14 +96,14 @@ class HttpTaskManagerTest {
         JsonObject firstObject = jsonArray.get(0).getAsJsonObject();
         SubTask receivedSubtask = gson.fromJson(firstObject, SubTask.class);
         Assertions.assertEquals(receivedSubtask.getId(), 2, "Подзадача не создана");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void getAllTasks() throws IOException, InterruptedException {
         response = postResponse("/tasks/task/", PORT, gson.toJson(task1));
         response = postResponse("/tasks/task/", PORT, gson.toJson(task2));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена" + response.statusCode());
         response = getResponse("/tasks/task/", PORT);
         String api = response.body();
@@ -114,14 +115,14 @@ class HttpTaskManagerTest {
         task1.setId(1);
         task2.setId(2);
         Assertions.assertTrue(receivedTask1.equals(task1) && receivedTask2.equals(task2), "Ошибка получения всех задач");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void getAllEpics() throws IOException, InterruptedException {
         response = postResponse("/tasks/epic/", PORT, gson.toJson(epic1));
         response = postResponse("/tasks/epic/", PORT, gson.toJson(epic2));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена" + response.statusCode());
         response = getResponse("/tasks/epic/", PORT);
         String api = response.body();
@@ -133,7 +134,7 @@ class HttpTaskManagerTest {
         epic1.setId(1);
         epic2.setId(2);
         Assertions.assertTrue(receivedTask1.equals(epic1) && receivedTask2.equals(epic2), "Ошибка получения всех задач");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
@@ -149,13 +150,13 @@ class HttpTaskManagerTest {
         subtask1.setId(2);
         subtask2.setId(3);
         Assertions.assertTrue(receivedTask1.equals(subtask1) && receivedTask2.equals(subtask2), "Ошибка получения всех задач");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void getTaskById() throws IOException, InterruptedException {
         response = postResponse("/tasks/task/", PORT, gson.toJson(task1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена " + response.statusCode());
         response = getResponse("/tasks/task/", PORT);
         String api = response.body();
@@ -166,13 +167,13 @@ class HttpTaskManagerTest {
         response = getResponse("/tasks/task/?id=" + taskId, PORT);
         task1.setId(1);
         Assertions.assertEquals(true, receivedTask.equals(task1), "Задача по id не получена");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void getEpicById() throws IOException, InterruptedException {
         response = postResponse("/tasks/epic/", PORT, gson.toJson(epic1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Эпик не был добавлен" + response.statusCode());
         response = getResponse("/tasks/epic/", PORT);
         String api = response.body();
@@ -183,7 +184,7 @@ class HttpTaskManagerTest {
         response = getResponse("/tasks/epic/?id=" + taskId, PORT);
         epic1.setId(1);
         Assertions.assertEquals(true, receivedTask.equals(epic1), "Задача по id не получена");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
@@ -206,7 +207,7 @@ class HttpTaskManagerTest {
         subtask1.setEpicId(1);
         subtask1.setId(2);
         Assertions.assertTrue(subTasksList.size() == 2 && subTasksList.contains(subtask1), "Подзадачи по epicId не получены");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
@@ -221,13 +222,13 @@ class HttpTaskManagerTest {
         response = getResponse("/tasks/subtask/?id=" + subTaskId, PORT);
         subtask1.setId(2);
         Assertions.assertTrue(receivedTask.equals(subtask1), "Задача по id не получена");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void updateTask() throws IOException, InterruptedException {
         postResponse("/tasks/task/", PORT, gson.toJson(task1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена" + response.statusCode());
         response = getResponse("/tasks/task/", PORT);
         String api = response.body();
@@ -237,13 +238,13 @@ class HttpTaskManagerTest {
         receivedTask.setStatus(Status.DONE);
         postResponse("/tasks/task/", PORT, gson.toJson(receivedTask));
         Assertions.assertEquals(true, receivedTask.getStatus().equals(Status.DONE), "Задача не обновлена");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void updateEpic() throws IOException, InterruptedException {
         response = postResponse("/tasks/epic/", PORT, gson.toJson(epic1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена" + response.statusCode());
         response = getResponse("/tasks/epic/", PORT);
         String api = response.body();
@@ -253,7 +254,7 @@ class HttpTaskManagerTest {
         receivedTask.setStatus(Status.DONE);
         postResponse("/tasks/epic/", PORT, gson.toJson(receivedTask));
         Assertions.assertEquals(true, receivedTask.getStatus().equals(Status.DONE), "Задача не обновлена");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
@@ -267,13 +268,13 @@ class HttpTaskManagerTest {
         receivedTask.setStatus(Status.DONE);
         postResponse("/tasks/subtask/", PORT, gson.toJson(receivedTask));
         Assertions.assertEquals(true, receivedTask.getStatus().equals(Status.DONE), "Задача не обновлена");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void deleteTaskById() throws IOException, InterruptedException {
         response = postResponse("/tasks/task/", PORT, gson.toJson(task1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена" + response.statusCode());
         response = getResponse("/tasks/task/", PORT);
         String api = response.body();
@@ -282,13 +283,13 @@ class HttpTaskManagerTest {
         int taskId = firstObject.getAsJsonPrimitive("id").getAsInt();
         deleteResponse("/tasks/task/?id=" + taskId, PORT);
         response = getResponse("/tasks/task/?id=" + taskId, PORT);
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void deleteEpicById() throws IOException, InterruptedException {
         response = postResponse("/tasks/epic/", PORT, gson.toJson(epic1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена" + response.statusCode());
         response = getResponse("/tasks/epic/", PORT);
         String api = response.body();
@@ -297,7 +298,7 @@ class HttpTaskManagerTest {
         int taskId = firstObject.getAsJsonPrimitive("id").getAsInt();
         deleteResponse("/tasks/epic/?id=" + taskId, PORT);
         response = getResponse("/tasks/epic/?id=" + taskId, PORT);
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
@@ -310,29 +311,29 @@ class HttpTaskManagerTest {
         int taskId = firstObject.getAsJsonPrimitive("id").getAsInt();
         deleteResponse("/tasks/subtask/?id=" + taskId, PORT);
         response = getResponse("/tasks/subtask/?id=" + taskId, PORT);
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void deleteAllTasks() throws IOException, InterruptedException {
         response = postResponse("/tasks/task/", PORT, gson.toJson(task1));
         response = postResponse("/tasks/task/", PORT, gson.toJson(task2));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена" + response.statusCode());
         deleteResponse("/tasks/task/", PORT);
         response = getResponse("/tasks/task/", PORT);
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void deleteAllEpics() throws IOException, InterruptedException {
         response = postResponse("/tasks/epic/", PORT, gson.toJson(epic1));
         response = postResponse("/tasks/epic/", PORT, gson.toJson(epic2));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена" + response.statusCode());
         deleteResponse("/tasks/epic/", PORT);
         response = getResponse("/tasks/epic/", PORT);
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
@@ -340,13 +341,13 @@ class HttpTaskManagerTest {
         createSubTasks();
         deleteResponse("/tasks/subtask/", PORT);
         response = getResponse("/tasks/subtask/", PORT);
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void getHistory() throws IOException, InterruptedException {
         response = postResponse("/tasks/task/", PORT, gson.toJson(task1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена " + response.statusCode());
         response = getResponse("/tasks/task/?id=1", PORT);
         response = getResponse("/tasks/history", PORT);
@@ -356,13 +357,13 @@ class HttpTaskManagerTest {
         Task receivedSubtask = gson.fromJson(firstObject, Task.class);
         task1.setId(1);
         Assertions.assertTrue(receivedSubtask.equals(task1), "История не получена");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     @Test
     void getPrioritizedTask() throws IOException, InterruptedException {
         response = postResponse("/tasks/task/", PORT, gson.toJson(task1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена " + response.statusCode());
         response = getResponse("/tasks/", PORT);
         String api = response.body();
@@ -371,12 +372,12 @@ class HttpTaskManagerTest {
         Task receivedSubtask = gson.fromJson(firstObject, Task.class);
         task1.setId(1);
         Assertions.assertTrue(receivedSubtask.equals(task1), "Приоритетные задачи не получены");
-        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, response.statusCode());
     }
 
     private void createSubTasks() throws IOException, InterruptedException {
         response = postResponse("/tasks/epic/", PORT, gson.toJson(epic1));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Задача не была добавлена" + response.statusCode());
         response = getResponse("/tasks/epic/", PORT);
         String api = response.body();
@@ -387,7 +388,7 @@ class HttpTaskManagerTest {
         subtask2.setEpicId(epicId);
         response = postResponse("/tasks/subtask/", PORT, gson.toJson(subtask1));
         response = postResponse("/tasks/subtask/", PORT, gson.toJson(subtask2));
-        if (response.statusCode() != 200)
+        if (response.statusCode() != HttpURLConnection.HTTP_OK)
             throw new RuntimeException("Подзадача не была добавлена" + response.statusCode());
     }
 

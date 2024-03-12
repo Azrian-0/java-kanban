@@ -1,6 +1,6 @@
 package managers;
 
-import Server.KVServer;
+import server.KVServer;
 import managers.impl.FileBackedTasksManager;
 import managers.impl.HttpTaskManager;
 import managers.impl.InMemoryHistoryManager;
